@@ -1,6 +1,6 @@
 from scipy.spatial.distance import pdist, squareform
 from scipy.linalg import eigh
-from numpy import ndarray, exp, full
+from numpy import ndarray, exp, full, sqrt
 
 
 class KernelPCA:
@@ -39,6 +39,6 @@ class KernelPCA:
         one_N_matrix = full((X.shape[0], X.shape[0]), 1 / X.shape[0])
         K_c = K - one_N_matrix.dot(K) - K.dot(one_N_matrix) + one_N_matrix.dot(K).dot(one_N_matrix)
         eigenvals, eigenvecs = eigh(K_c)
-        eigenvecs = eigenvecs[:, ::-1]
-        X_projected = eigenvecs[:, :self.n_components]
+        eigenvals, eigenvecs = eigenvals[::-1], eigenvecs[:, ::-1]
+        X_projected = eigenvecs[:, :self.n_components] / sqrt(eigenvals[:self.n_components])
         return X_projected

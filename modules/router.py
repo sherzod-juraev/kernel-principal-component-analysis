@@ -8,7 +8,7 @@ modules_router = APIRouter()
 
 kernel_pca = KernelPCA(
     gamma=.1,
-    n_components=2
+    n_components=1
 )
 
 
