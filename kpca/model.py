@@ -1,6 +1,6 @@
 from scipy.spatial.distance import pdist, squareform
 from scipy.linalg import eigh
-from numpy import ndarray, exp, full, sqrt
+from numpy import ndarray, exp, full, sqrt, where
 
 
 class KernelPCA:
@@ -40,5 +40,6 @@ class KernelPCA:
         K_c = K - one_N_matrix.dot(K) - K.dot(one_N_matrix) + one_N_matrix.dot(K).dot(one_N_matrix)
         eigenvals, eigenvecs = eigh(K_c)
         eigenvals, eigenvecs = eigenvals[::-1], eigenvecs[:, ::-1]
-        X_projected = eigenvecs[:, :self.n_components] / sqrt(eigenvals[:self.n_components])
+        eigenvals = where(eigenvals[:self.n_components] < 1e-10, 1e-10, eigenvals[:self.n_components])
+        X_projected = eigenvecs[:, :self.n_components] / sqrt(eigenvals)
         return X_projected
